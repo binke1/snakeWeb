@@ -10,8 +10,13 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+  .width-1200{
+    width: 1200px;
+    margin: auto;
+  }
   body{
+    font-size: 14px;
     margin: 0;
     padding: 0;
   }

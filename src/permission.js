@@ -10,20 +10,18 @@ router.beforeEach((to, from, next) => {
   NProgress.start()
   if (getToken()) {
     if (to.path === '/login' || to.path === '/register') {
-      //if choose login , remove token, same logout
       removeToken()
       removeUserUuid()
       next()
-      // next({ path: '/' })
     } else {
       if (store.getters.roles.length === 0) {
-        store.dispatch('GetInfo').then(res => {
-          const roles = res.data.result.role
-          store.dispatch('GenerateRoutes', { roles }).then(() => {
+        // store.dispatch('GetInfo').then(res => {
+        //   const roles = res.data.result.role
+        //   store.dispatch('GenerateRoutes', { roles }).then(() => {
             router.addRoutes(store.getters.addRouters)
             next({ ...to })
-          })
-        })
+        //   })
+        // })
       } else {
         next()
       }
