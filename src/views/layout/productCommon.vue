@@ -1,6 +1,6 @@
 <template>
     <div class="product-common">
-      <img :title="data.title" src="static/images/product.jpg" alt="">
+      <img @click="viewProduct" :title="data.title" src="static/images/product.jpg" alt="">
       <div class="original-price">本店售价 ：<b>${{data.beforeTaxPrice}}USD</b></div>
       <div class="limit-price">限时价格 ：<b>${{data.beforeTaxPrice}}USD</b></div>
     </div>
@@ -9,7 +9,17 @@
 <script>
     export default {
       name: "productCommon",
-      props: ['data']
+      props: ['data'],
+      methods: {
+        viewProduct() {
+          this.$router.push({
+            path: '/productDetails',
+            query: {
+              id: this.data.id
+            }
+          })
+        }
+      }
     }
 </script>
 

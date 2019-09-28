@@ -11,6 +11,10 @@ export const constantRouterMap = [{
   path: '/',
   name: 'home',
   component: _import('home/index')
+}, {
+  path: '/productDetails',
+  name: 'productDetails',
+  component: _import('product/productDetails')
 },]
 export default new Router({
   // mode: 'history',

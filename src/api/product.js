@@ -16,3 +16,10 @@ export function getProductList(jsonData) {
   })
 }
 
+export function gePrepaidCardById(id) {
+  return fetch({
+    url: '/prepaidCard/'+id,
+    method: 'get'
+  })
+}
+
