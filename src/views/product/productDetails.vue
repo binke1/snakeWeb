@@ -4,6 +4,15 @@
       <div v-if="productData" class="width-1200 product-info">
         <div class="w-250">
           <h2>产品列表</h2>
+          <div class="all-product" v-if="productList.length">
+            <div class="product-list" v-for="(list,index) in productList" :key="index">
+              <img src="static/images/product.jpg" alt="">
+              <p>
+                <span v-if="list.title">{{list.title.slice(0,10)}}</span>
+                <span v-else>{{list.title}}</span>
+              </p>
+            </div>
+          </div>
         </div>
         <div class="right-info">
           <div class="buy-product">
@@ -118,7 +127,7 @@
 </template>
 
 <script>
-  import {gePrepaidCardById} from 'api/product'
+  import {gePrepaidCardById,getPageProductList} from 'api/product'
   import topCommon from '@/views/layout/commonTop'
   const tabList = ['商品描述','用户评论']
     export default {
@@ -133,15 +142,27 @@
           productData: null,
           num: 1,
           select: 0,
+          pageNo: 1,
+          pageSize: 10,
+          productList: [],
+          total: 0
         }
       },
       mounted() {
+        this.getPageProductList()
         if (this.$route.query.id) {
           this.productId = this.$route.query.id
           this.gePrepaidCardById(this.productId)
         }
       },
       methods: {
+        getPageProductList() {
+          getPageProductList(this.pageNo, this.pageSize, {}).then(response => {
+            console.log(response)
+            this.productList = response.data.result.list
+            this.total = response.data.result.recordsTotal
+          })
+        },
         gePrepaidCardById(id) {
           gePrepaidCardById(id).then(response => {
             this.productData = response.data.result
@@ -181,7 +202,22 @@
         border-width: 3px 1px 1px 1px;
         border-color: #fd843d #e1e1e1 #e1e1e1 #e1e1e1;
         border-style: solid;
-        height: 100px;
+        display: inline-block;
+        .all-product{
+          display: flex;
+          justify-content: space-around;
+        }
+        .product-list{
+          img{
+            width: 110px;
+            height: 110px;
+            border: 1px solid #e3e3e3;
+          }
+          p{
+            margin: 8px 0;
+            font-size: 12px;
+          }
+        }
       }
       .right-info{
         width: 940px;

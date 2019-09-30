@@ -15,11 +15,13 @@ router.beforeEach((to, from, next) => {
       next()
     } else {
       if (store.getters.roles.length === 0) {
+        // console.log(1)
         // store.dispatch('GetInfo').then(res => {
         //   const roles = res.data.result.role
         //   store.dispatch('GenerateRoutes', { roles }).then(() => {
-            router.addRoutes(store.getters.addRouters)
-            next({ ...to })
+        //     router.addRoutes(store.getters.addRouters)
+        //     next({ ...to })
+            next()
         //   })
         // })
       } else {
