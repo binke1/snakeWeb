@@ -17,3 +17,11 @@ export function activeUser(activeMailUuid, userUuid) {
     }
   })
 }
+
+export function userRegister(jsonData) {
+  return fetch({
+    url: '/users/client/register',
+    method: 'post',
+    data: jsonData
+  })
+}
