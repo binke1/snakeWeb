@@ -63,7 +63,11 @@ export const constantRouterMap = [{
   path: '/productDetails',
   name: 'productDetails',
   component: _import('product/productDetails')
-},]
+}, {
+  path: '/placeOrder',
+  name: 'placeOrder',
+  component: _import('product/placeOrder')
+}]
 export default new Router({
   // mode: 'history',
   scrollBehavior: () => ({

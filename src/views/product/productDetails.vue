@@ -137,7 +137,6 @@
 <script>
   import axios from 'axios'
   import {gePrepaidCardById,getPageProductList} from 'api/product'
-  import {createOrder} from 'api/order'
   import topCommon from '@/views/layout/commonTop'
   const tabList = ['商品描述','用户评论']
     export default {
@@ -177,12 +176,8 @@
       methods: {
         // 创建订单
         createOrder() {
-          createOrder(this.placeOrderData).then(response => {
-            this.$message({
-              message: '订单已提交',
-              type: 'success',
-              center: true
-            })
+          this.$router.push({
+            path: '/placeOrder'
           })
         },
         getAllInfo() {
