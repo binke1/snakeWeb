@@ -47,19 +47,19 @@
               <div>
                 <span>购买数量：</span>
                 <span>
-                   <el-input-number v-model="num" size="small" :min="1"></el-input-number> 件
+                   <el-input-number v-model="placeOrderData.quantity" size="small" :min="1"></el-input-number> 件
                   <span class="text-hint">（注：每一件代表100元）</span>
                 </span>
               </div>
-              <div>
-                <span>*充值帐号：</span>
-                <span>
-                   <el-input style="width: 160px" v-model="num" size="small" :min="1"></el-input>
-                  <span class="text-hint">（请填写您需要充值的游戏账号或通行证）</span>
-                </span>
-              </div>
+              <!--<div>-->
+                <!--<span>*充值帐号：</span>-->
+                <!--<span>-->
+                   <!--<el-input style="width: 160px" v-model="num" size="small" :min="1"></el-input>-->
+                  <!--<span class="text-hint">（请填写您需要充值的游戏账号或通行证）</span>-->
+                <!--</span>-->
+              <!--</div>-->
               <div class="user-buy-btn">
-                <button>立即购买</button>
+                <button @click="createOrder">立即购买</button>
               </div>
             </div>
           </div>
@@ -137,6 +137,7 @@
 <script>
   import axios from 'axios'
   import {gePrepaidCardById,getPageProductList} from 'api/product'
+  import {createOrder} from 'api/order'
   import topCommon from '@/views/layout/commonTop'
   const tabList = ['商品描述','用户评论']
     export default {
@@ -156,7 +157,12 @@
           pageSize: 10,
           productList: [],
           total: 0,
-          shoppingDetails: null
+          shoppingDetails: null,
+          placeOrderData: {
+            type: 'prepaid',
+            prepaidCardId: null,
+            quantity: 0
+          }
         }
       },
       mounted() {
@@ -164,15 +170,25 @@
         this.getPageProductList()
         if (this.$route.query.id) {
           this.productId = this.$route.query.id
+          this.placeOrderData.prepaidCardId = this.$route.query.id
           this.gePrepaidCardById(this.productId)
         }
       },
       methods: {
+        // 创建订单
+        createOrder() {
+          createOrder(this.placeOrderData).then(response => {
+            this.$message({
+              message: '订单已提交',
+              type: 'success',
+              center: true
+            })
+          })
+        },
         getAllInfo() {
           axios.get('static/shoppingDetails.json').then(response => {
             let data = response.data.result
             this.shoppingDetails = data[this.type]
-            console.log(data)
           })
         },
         getPageProductList() {
@@ -283,6 +299,7 @@
             .user-buy-btn{
               margin-top: 25px;
               button{
+                cursor: pointer;
                 outline: none;
                 border: none;
                 width: 170px;

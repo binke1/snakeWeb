@@ -9,10 +9,10 @@
           </div>
           <div class="user-info">
             <span v-if="userName">
-              <span><span @click="$router.push('/personalCenter')">欢迎！{{userName}}</span>[退出]</span>
-              <span>用户中心</span>
+              <span><span @click="$router.push('/personalCenter')">欢迎！{{userName}}</span><span @click="loginOut">[退出]</span></span>
+              <span @click="$router.push('/personalCenter')">用户中心</span>
               |
-              <span>充值历史</span>
+              <span @click="viewHistory">充值历史</span>
               <span>消息<span class="msg">(16)</span></span>
             </span>
             <span v-else>
@@ -40,7 +40,7 @@
       <div class="nav-box">
         <nav class="width-1200">
           <ul>
-            <li :class="selectIndex===index?'active-menu':''" v-for="(list,index) in menuList" :key="index">{{list.title}}</li>
+            <li @click="goToRouter(index)" :class="selectIndex===index?'active-menu':''" v-for="(list,index) in menuList" :key="index">{{list.title}}</li>
           </ul>
         </nav>
       </div>
@@ -49,14 +49,22 @@
 
 <script>
   import {
-    getCookie
-  } from "@/utils/auth";
+    getToken,
+    getUserUuid,
+    choseWhichName,
+    removeUserUuid,
+    removeToken,
+    delCookie,
+    getCookie,
+    setCookie
+  } from '@/utils/auth'
+  import {logout} from '@/api/login'
   const menuList = [{
     title: '首页',
-    router: ''
+    router: '/'
   }, {
     title: '苹果App充值',
-    router: ''
+    router: '/'
   }]
   export default {
     name: "commonTop",
@@ -69,6 +77,33 @@
     },
     mounted() {
       this.userName = getCookie('userName')
+    },
+    methods: {
+      loginOut() {
+        logout().then(response => {
+          if(response.data.result.messages[0].code == '2002'){
+            removeUserUuid()
+            removeToken()
+            delCookie('realFirstName')
+            delCookie('realLastName')
+            delCookie('userName')
+            this.$router.push({
+              name: 'login'
+            })
+          }
+        })
+      },
+      goToRouter(index) {
+        this.$router.push(this.menuList[index].router)
+      },
+      viewHistory() {
+        this.$router.push({
+          path: '/personalCenter/topUpHistory',
+          query: {
+            active: 2
+          }
+        })
+      }
     }
   }
 </script>

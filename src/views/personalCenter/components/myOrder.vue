@@ -13,11 +13,28 @@
         </ul>
       </div>
       <div>
-        <el-table border size="small" empty-text="暂无订单">
-          <el-table-column align="center" width="400" label="商品名称"></el-table-column>
-          <el-table-column align="center" label="订单金额"></el-table-column>
-          <el-table-column align="center" label="订单状态"></el-table-column>
-          <el-table-column align="center" label="操作"></el-table-column>
+        <el-table border size="small" :data="orderList" empty-text="暂无订单">
+          <el-table-column align="center" width="400" label="商品名称">
+            <template slot-scope="scope">
+              {{scope.row.orderLineItem.productTitle}}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="订单金额">
+            <template slot-scope="scope">
+              ${{scope.row.totalPrice.toFixed(2)}}CAD
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="订单状态">
+            <template slot-scope="scope">
+              <span v-if="scope.row.status==='UNPAID'">待付款</span>
+              <span v-else-if="scope.row.status==='PAID'">待支付</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="操作">
+            <template slot-scope="scope">
+              <el-button size="mini" type="primary">查看订单</el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <div style="text-align: right;margin-top: 15px">
           <el-pagination
@@ -25,7 +42,7 @@
             :current-page="pageNo"
             :page-size="pageSize"
             layout="total, prev, pager, next, jumper"
-            :total="400">
+            :total="total">
           </el-pagination>
         </div>
       </div>
@@ -33,15 +50,16 @@
 </template>
 
 <script>
+  import {findOrderPage} from 'api/order'
   const orderStatusList = [{
       status: '全部',
       value: ''
     }, {
       status: '待付款',
-      value: ''
+      value: 'UNPAID'
     }, {
       status: '待发货',
-      value: ''
+      value: 'PAID'
     }, {
       status: '待收货',
       value: ''
@@ -60,12 +78,27 @@
           select: 0,
           pageNo: 1,
           pageSize: 10,
-          tableData: []
+          tableData: [],
+          orderList: [],
+          total: 0
         }
       },
+      mounted() {
+        this.findOrderPage({})
+      },
       methods: {
+        findOrderPage(jsonData) {
+          this.orderList = []
+          findOrderPage(this.pageNo, this.pageSize, 2052, jsonData).then(response => {
+            console.log(response)
+            this.orderList = response.data.result.list
+            this.total = response.data.result.recordsTotal
+          })
+        },
         changeStatus(index) {
           this.select = index
+          this.pageNo = 1
+          this.findOrderPage({status: this.orderStatusList[index].value})
         },
         handleCurrentChange(pageNo) {
           this.pageNo = pageNo

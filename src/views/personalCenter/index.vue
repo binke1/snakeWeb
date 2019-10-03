@@ -70,6 +70,11 @@
           select: 0
         }
       },
+      mounted() {
+        if (this.$route.query.active) {
+          this.select = this.$route.query.active
+        }
+      },
       methods: {
         changeMenu(index) {
           this.select = index
