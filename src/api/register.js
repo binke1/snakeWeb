@@ -1,8 +1,8 @@
 import fetch from "@/utils/fetch";
 
-export function register(jsonData) {
+export function register(jsonData, type) {
   return fetch({
-    url: '/register',
+    url: '/register?type=' + type,
     method: 'post',
     data: jsonData
   })

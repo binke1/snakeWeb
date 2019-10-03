@@ -5,7 +5,7 @@ import "nprogress/nprogress.css";
 import {getToken, removeToken, removeUserUuid} from "@/utils/auth";
 import pageParams from "./store/modules/pageParams"; // validate permission
 
-const whiteList = ['/login', '/','/productDetails']
+const whiteList = ['/login', '/','/productDetails', '/register', '/personalCenter']
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if (getToken()) {
@@ -15,7 +15,6 @@ router.beforeEach((to, from, next) => {
       next()
     } else {
       if (store.getters.roles.length === 0) {
-        // console.log(1)
         // store.dispatch('GetInfo').then(res => {
         //   const roles = res.data.result.role
         //   store.dispatch('GenerateRoutes', { roles }).then(() => {

@@ -10,7 +10,8 @@ export function login(username, password) {
     data: qs.stringify({
       'grant_type':'password',
       'username':username,
-      'password' : credentials
+      'password' : credentials,
+      'type': 'email'
     })
   })
 }

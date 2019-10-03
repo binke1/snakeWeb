@@ -3,16 +3,24 @@
       <div class="top-info">
         <div class="top-content width-1200">
           <div class="currency">
-            <img src="static/imgaes/pc_314_dq.png" alt="">
-            <span>美元 $USD</span>
-            <span class="text-hint">出当前币种外，其他币种请以美元提交订单，付款时系统自动结算！</span>
+            <img src="static/images/pc_314_dq.png" alt="">
+            <span>加元 $CAD</span>
+            <span class="text-hint"></span>
           </div>
           <div class="user-info">
-            <!--<span>您好！</span>-->
-            <span @click="$router.push('/login')" class="login">登录</span>
-            |
-            <span class="register">注册</span>
-            |
+            <span v-if="userName">
+              <span><span @click="$router.push('/personalCenter')">欢迎！{{userName}}</span>[退出]</span>
+              <span>用户中心</span>
+              |
+              <span>充值历史</span>
+              <span>消息<span class="msg">(16)</span></span>
+            </span>
+            <span v-else>
+              <span @click="$router.push('/login')" class="login">登录</span>
+              |
+              <span class="register">注册</span>
+              |
+            </span>
           </div>
         </div>
       </div>
@@ -40,6 +48,9 @@
 </template>
 
 <script>
+  import {
+    getCookie
+  } from "@/utils/auth";
   const menuList = [{
     title: '首页',
     router: ''
@@ -52,8 +63,12 @@
     data() {
       return {
         menuList: menuList,
-        selectIndex: 0
+        selectIndex: 0,
+        userName: null
       }
+    },
+    mounted() {
+      this.userName = getCookie('userName')
     }
   }
 </script>
@@ -77,12 +92,23 @@
         .currency{
           font-size: 12px;
           color: #3c3c3c;
+          display: flex;
+          align-items: center;
+          img{
+            margin-right: 10px;
+          }
         }
         .user-info{
+          .msg{
+            color: #f00;
+          }
           span{
             color: #777;
             font-size: 12px;
             cursor: pointer;
+            span{
+              margin: 0 5px;
+            }
           }
         }
       }

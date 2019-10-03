@@ -57,12 +57,14 @@ service.interceptors.response.use(
       // store.dispatch('closeLoading')
       if (res.errors != null && res.errors != 'undefined') {
         let error = res.errors[0]
-        console.log(error)
-
+        if (error.code == '0101') {
+          error.description = '此用户不存在！'
+        }
         Message({
           message: error.description,
           type: 'error',
-          duration: 5 * 1000
+          duration: 5 * 1000,
+          center: true
         })
 
         if (error.code === 50008 || error.code === 50012 || error.code === 50014){

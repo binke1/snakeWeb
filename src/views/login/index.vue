@@ -9,11 +9,15 @@
       <el-card>
         <div class="user-login">
           <p class="login-admin">账户登录</p>
-          <input name="username" type="text" placeholder="邮箱/用户名">
-          <div class="user-space"></div>
-          <input name="password" type="password" placeholder="密码">
-          <div class="user-space"></div>
-          <button>登录</button>
+          <input @focus="setUserName" v-model="loginData.username" name="username" type="text" placeholder="邮箱/用户名">
+          <div class="user-space">
+            <span v-if="!isUserName">请填写邮箱/用户名</span>
+          </div>
+          <input @focus="setPassword" v-model="loginData.password" name="password" type="password" placeholder="密码">
+          <div class="user-space">
+            <span v-if="!isPassword">请填写密码</span>
+          </div>
+          <button @click="login">登录</button>
           <div class="user-register">
             <span>您还没有账号？<span @click="$router.push('/register')">立即注册</span></span>
             <span>忘记密码？</span>
@@ -24,8 +28,65 @@
   </div>
 </template>
 <script>
+  import {
+    setCookie,
+    delCookie,
+    getToken,
+    getUserUuid
+  } from "./../../utils/auth";
+  import {
+    login,
+    getInfo,
+    sendLoginSmPhoneNum
+  } from "@/api/login";
   export default {
     name: 'login',
+    data() {
+      return {
+        isUserName: true,
+        isPassword: true,
+        loginData: {
+          username: null,
+          password: null,
+        }
+      }
+    },
+    methods: {
+      setUserName() {
+        this.isUserName = true
+        let username = document.getElementsByName('username')[0]
+        username.style.border = '1px solid #dcdcdc'
+      },
+      setPassword() {
+        this.isPassword = true
+        let password = document.getElementsByName('password')[0]
+        password.style.border = '1px solid #dcdcdc'
+      },
+      login() {
+        if (this.loginData.username && this.loginData.password) {
+          this.$store.dispatch('Login', this.loginData).then(() => {
+            getInfo().then(response => {
+              let getUserInfo = response.data.result
+              delCookie('realFirstName')
+              delCookie('realLastName')
+              delCookie('userName')
+              setCookie('userName', this.loginData.username)
+              setCookie('realFirstName', escape(getUserInfo.firstName)) //存储用户firstName
+              setCookie('realLastName', escape(getUserInfo.lastName)) //存储用户lastName
+              this.$router.push('/')
+            })
+          })
+        } else if (!this.loginData.username) {
+          this.isUserName = false
+          let username = document.getElementsByName('username')[0]
+          username.style.border = '1px solid #ff0000'
+        } else {
+          this.isPassword = false
+          let password = document.getElementsByName('password')[0]
+          password.style.border = '1px solid #ff0000'
+        }
+      }
+    }
   }
 </script>
 <style lang="scss" scoped>
@@ -58,7 +119,11 @@
           letter-spacing: 1px;
         }
         .user-space{
+          text-align: left;
           height: 30px;
+          line-height: 30px;
+          color: #ff0000;
+          font-size: 12px;
         }
         .user-register{
           display: flex;
@@ -89,6 +154,7 @@
           padding-left: 12px;
           border-radius: 5px;
           line-height: 44px;
+          outline: none;
         }
         button{
           width: 100%;

@@ -75,42 +75,48 @@
                   <div class="just">
                   <span>
                     <span class="small-title">商品面值：</span>
-                    <span>100元</span>
+                    <span>${{productData.beforeTaxPrice}}USD</span>
                   </span>
                     <span>
                     <span class="small-title">商品类型：</span>
-                    <span>官方直充</span>
+                    <span>人工代充</span>
                   </span>
                     <span>
                     <span class="small-title">品牌：</span>
-                    <span>金山游戏</span>
+                    <span>苹果</span>
                   </span>
                   </div>
                   <div>
                     <span class="small-title">适用范围：</span>
-                    <div>剑侠情缘3通宝10000通宝</div>
+                    <div>
+                      <p v-for="(item,index) in shoppingDetails.application" :key="index">{{item}}</p>
+                    </div>
+                    <!--<div>剑侠情缘3通宝10000通宝</div>-->
                   </div>
                   <div>
                     <span class="small-title">如何收货：</span>
                     <div>
-                      <p>1、付款成功后，系统将根据您选择的分区及填写的账户信息，自动充值完成</p>
-                      <p>2、官方查询网址：http://my.xoyo.com/users/seeBalance</p>
+                      <p v-for="(item,index) in shoppingDetails.takeDelivery" :key="index">{{item}}</p>
+                      <!--<p>1、付款成功后，系统将根据您选择的分区及填写的账户信息，自动充值完成</p>-->
+                      <!--<p>2、官方查询网址：http://my.xoyo.com/users/seeBalance</p>-->
                     </div>
                   </div>
                   <div>
                     <span class="small-title">支付方式：</span>
                     <div>
-                      <p>1、支持PAYPAL账户及各种信用卡支付（Visa,MasterCard,Maestro,Discover,American Express,JCB,Carte Aurore,Carte Bancaire,Lastchrift,Carta prepagata Paypal,Postepay,Cofinoga ou Privilège,4 étoiles）</p>
-                      <p>2、支持银行汇款及KA-CN用户余额支付</p>
+                      <p v-for="(item,index) in shoppingDetails.payMethod" :key="index">{{item}}</p>
+                      <!--<p>1、支持PAYPAL账户及各种信用卡支付（Visa,MasterCard,Maestro,Discover,American Express,JCB,Carte Aurore,Carte Bancaire,Lastchrift,Carta prepagata Paypal,Postepay,Cofinoga ou Privilège,4 étoiles）</p>-->
+                      <!--<p>2、支持银行汇款及KA-CN用户余额支付</p>-->
                     </div>
                   </div>
                   <div>
                     <span class="small-title">购买流程：</span>
                     <div>
-                      <p>1.在网站中直接输入您要充值的商品件数（一件为100元人民币）</p>
-                      <p>2.选择充值区域</p>
-                      <p>3.请您填写好数量及您要充值的 游戏账号<span style="color: #0000ff">（非游戏昵称，避免账号填写错误导致充值后无法修正）</span></p>
-                      <p>4.确认订单信息，选择支付方式，提交订单，结算付款</p>
+                      <p v-for="(item,index) in shoppingDetails.processPurchase" :key="index">{{item}}</p>
+                      <!--<p>1.在网站中直接输入您要充值的商品件数（一件为100元人民币）</p>-->
+                      <!--<p>2.选择充值区域</p>-->
+                      <!--<p>3.请您填写好数量及您要充值的 游戏账号<span style="color: #0000ff">（非游戏昵称，避免账号填写错误导致充值后无法修正）</span></p>-->
+                      <!--<p>4.确认订单信息，选择支付方式，提交订单，结算付款</p>-->
                     </div>
                   </div>
                 </div>
@@ -129,6 +135,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   import {gePrepaidCardById,getPageProductList} from 'api/product'
   import topCommon from '@/views/layout/commonTop'
   const tabList = ['商品描述','用户评论']
@@ -139,6 +146,7 @@
       },
       data() {
         return {
+          type: 'apple',
           tabList: tabList,
           productId: null,
           productData: null,
@@ -147,10 +155,12 @@
           pageNo: 1,
           pageSize: 10,
           productList: [],
-          total: 0
+          total: 0,
+          shoppingDetails: null
         }
       },
       mounted() {
+        this.getAllInfo()
         this.getPageProductList()
         if (this.$route.query.id) {
           this.productId = this.$route.query.id
@@ -158,9 +168,15 @@
         }
       },
       methods: {
+        getAllInfo() {
+          axios.get('static/shoppingDetails.json').then(response => {
+            let data = response.data.result
+            this.shoppingDetails = data[this.type]
+            console.log(data)
+          })
+        },
         getPageProductList() {
           getPageProductList(this.pageNo, this.pageSize, {}).then(response => {
-            console.log(response)
             this.productList = response.data.result.list
             this.total = response.data.result.recordsTotal
           })
@@ -168,7 +184,6 @@
         gePrepaidCardById(id) {
           gePrepaidCardById(id).then(response => {
             this.productData = response.data.result
-            console.log(response)
           })
          },
         changeTab(index) {
@@ -304,6 +319,10 @@
           .product-summary-tab{
             margin: 20px 0;
             font-size: 12px;
+            p{
+              line-height: 30px;
+              margin: 0;
+            }
            >div:first-child{
              border: 1px solid #eef5ff;
              .just{

@@ -20,4 +20,7 @@ export default {
     margin: 0;
     padding: 0;
   }
+  .el-table thead th{
+    background-color: rgba(240,240,240,.4) !important;
+  }
 </style>
