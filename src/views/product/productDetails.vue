@@ -3,14 +3,16 @@
       <topCommon></topCommon>
       <div v-if="productData" class="width-1200 product-info">
         <div class="w-250">
-          <h2>产品列表</h2>
-          <div class="all-product" v-if="productList.length">
-            <div class="product-list" v-for="(list,index) in productList" :key="index">
-              <img src="static/images/product.jpg" alt="">
-              <p>
-                <span v-if="list.title">{{list.title.slice(0,10)}}</span>
-                <span v-else>{{list.title}}</span>
-              </p>
+          <div>
+            <h2>产品列表</h2>
+            <div class="all-product" v-if="productList.length">
+              <div class="product-list" v-for="(list,index) in productList" :key="index">
+                <img src="static/images/product.jpg" alt="">
+                <p>
+                  <span v-if="list.title">{{list.title.slice(0,10)}}</span>
+                  <span v-else>{{list.title}}</span>
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -199,10 +201,11 @@
       justify-content: space-between;
       .w-250{
         width: 250px;
-        border-width: 3px 1px 1px 1px;
-        border-color: #fd843d #e1e1e1 #e1e1e1 #e1e1e1;
-        border-style: solid;
-        display: inline-block;
+        >div{
+          border-width: 3px 1px 1px 1px;
+          border-color: #fd843d #e1e1e1 #e1e1e1 #e1e1e1;
+          border-style: solid;
+        }
         .all-product{
           display: flex;
           justify-content: space-around;

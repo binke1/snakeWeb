@@ -9,7 +9,7 @@
           </div>
           <div class="user-info">
             <!--<span>您好！</span>-->
-            <span class="login">登录</span>
+            <span @click="$router.push('/login')" class="login">登录</span>
             |
             <span class="register">注册</span>
             |
@@ -82,6 +82,7 @@
           span{
             color: #777;
             font-size: 12px;
+            cursor: pointer;
           }
         }
       }

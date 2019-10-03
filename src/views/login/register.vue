@@ -8,15 +8,15 @@
       <img src="static/images/bg.jpg" alt="">
       <el-card>
         <div class="user-login">
-          <p class="login-admin">账户登录</p>
-          <input name="username" type="text" placeholder="邮箱/用户名">
+          <p class="login-admin">注册账号</p>
+          <input name="username" type="text" placeholder="请输入邮箱账号">
           <div class="user-space"></div>
-          <input name="password" type="password" placeholder="密码">
+          <input name="password" type="password" placeholder="请输入密码">
           <div class="user-space"></div>
+          <div>注册即代表同意<span>《服务条款》</span>及《隐私协议》</div>
           <button>登录</button>
           <div class="user-register">
-            <span>您还没有账号？<span @click="$router.push('/register')">立即注册</span></span>
-            <span>忘记密码？</span>
+            <span>已有账号？<span>立即登录</span></span>
           </div>
         </div>
       </el-card>
