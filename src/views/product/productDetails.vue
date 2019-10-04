@@ -26,15 +26,15 @@
               <div class="red-style">请注意区服选择</div>
               <div>
                 <span>本店售价：</span>
-                <span class="price-one">${{productData.beforeTaxPrice}}USD</span>
+                <span class="price-one">${{productData.beforeTaxPrice}}CAD</span>
               </div>
               <div>
                 <span>限时价格：</span>
-                <span class="price">${{productData.beforeTaxPrice}}USD</span>
+                <span class="price">${{productData.beforeTaxPrice}}CAD</span>
               </div>
               <div style="margin-top: 20px">
                 <span>商品总价：</span>
-                <span class="price">${{productData.beforeTaxPrice}}USD</span>
+                <span class="price">${{productData.beforeTaxPrice}}CAD</span>
               </div>
               <div class="product-active">
                 <span>满减活动：</span>
@@ -136,8 +136,11 @@
 
 <script>
   import axios from 'axios'
+  import {createOrder} from 'api/order'
   import {gePrepaidCardById,getPageProductList} from 'api/product'
   import topCommon from '@/views/layout/commonTop'
+  import {getCookie} from "@/utils/auth";
+
   const tabList = ['商品描述','用户评论']
     export default {
       name: "productDetails",
@@ -150,7 +153,6 @@
           tabList: tabList,
           productId: null,
           productData: null,
-          num: 1,
           select: 0,
           pageNo: 1,
           pageSize: 10,
@@ -160,7 +162,9 @@
           placeOrderData: {
             type: 'prepaid',
             prepaidCardId: null,
-            quantity: 0
+            quantity: 1,
+            appleId: null,
+            comment: null
           }
         }
       },
@@ -177,7 +181,14 @@
         // 创建订单
         createOrder() {
           this.$router.push({
-            path: '/placeOrder'
+            path: '/placeOrder',
+            name: 'placeOrder',
+            query: {
+              id: this.productId
+            },
+            params: {
+              placeOrderData: this.placeOrderData
+            }
           })
         },
         getAllInfo() {

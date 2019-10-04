@@ -84,6 +84,7 @@
 <script>
   import {getCookie} from "@/utils/auth";
   import moment from 'moment'
+  import bus from '@/utils/eventBus'
   export default {
     name: "myOrder",
     data() {
@@ -104,6 +105,7 @@
       }
     },
     mounted() {
+      bus.$emit('changeActive', 7)
       this.userName = getCookie('userName')
       const nowYear = Number(moment().format('YYYY'))
       for (let i = 1956; i <= nowYear;i++) {

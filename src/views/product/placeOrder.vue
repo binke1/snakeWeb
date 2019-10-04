@@ -1,33 +1,33 @@
 <template>
   <div class="place-order">
     <commonTopTwo></commonTopTwo>
-    <div class="order-container width-1200">
+    <div v-if="productData" class="order-container width-1200">
       <div class="order-left">
         <h3>订单信息</h3>
         <div>
           <div>
             <span>商品名称：</span>
-            <span>订单标题</span>
+            <span>{{productData.title}}</span>
           </div>
           <div>
             <span>充值金额：</span>
-            <span>100元 * 1</span>
+            <span>{{productData.beforeTaxPrice}}CAD * {{placeOrderData.quantity}}</span>
           </div>
           <div>
             <span>支付方式：</span>
-            <span>支持任何支付方式</span>
+            <span>支付宝、微信、信用卡</span>
           </div>
           <div>
             <span>小计：</span>
-            <span>C$23.61CAD</span>
+            <span>C${{(productData.beforeTaxPrice*placeOrderData.quantity).toFixed(2)}}CAD</span>
           </div>
-          <div>
+          <div v-if="productData.hasTax">
             <span>税：</span>
-            <span>C$5.00CAD</span>
+            <span>C${{((productData.gstRate+productData.pstRate)*productData.beforeTaxPrice*placeOrderData.quantity).toFixed(2)}}CAD</span>
           </div>
           <div>
             <span>付款金额：</span>
-            <span>C$25.12CAD</span>
+            <span>C${{((productData.gstRate+productData.pstRate)*productData.beforeTaxPrice*placeOrderData.quantity + productData.beforeTaxPrice*placeOrderData.quantity).toFixed(2)}}CAD</span>
            </div>
         </div>
       </div>
@@ -36,12 +36,12 @@
         <p class="sure-hint">登录代充，请备注密码或联系客服</p>
         <div class="user-apple">
           <span>充值 APPLE ID：</span>
-          <input type="text">
+          <input v-model="placeOrderData.appleId" type="text">
           <span>*</span>
         </div>
         <div class="order-comment">
           <span>订单备注：</span>
-          <textarea placeholder="请输入备注信息..." cols="30" rows="5"></textarea>
+          <textarea v-model="placeOrderData.comment" placeholder="请输入备注信息..." cols="30" rows="5"></textarea>
         </div>
       </div>
     </div>
@@ -51,28 +51,71 @@
        <div>微信</div>
     </div>
     <div class="submit-order width-1200">
-      <button>提交订单</button>
+      <button @click="submitOrder">提交订单</button>
     </div>
   </div>
 </template>
 
 <script>
   import commonTopTwo from '@/views/layout/commonTopTwo'
+  import {getCookie,getToken} from "@/utils/auth";
   import {createOrder} from 'api/order'
+  import {gePrepaidCardById} from 'api/product'
     export default {
       name: "payOrder",
       components: {
         commonTopTwo
       },
+      data() {
+        return {
+          productId: null,
+          placeOrderData: {
+            type: 'prepaid',
+            prepaidCardId: null,
+            quantity: 1,
+            appleId: null,
+            comment: null
+          },
+          productData: null
+        }
+      },
+      mounted() {
+        if (this.$route.query.id) {
+          this.productId = this.$route.query.id
+          this.gePrepaidCardById(this.productId)
+        }
+        if (this.$route.params.placeOrderData) {
+          this.placeOrderData = this.$route.params.placeOrderData
+        } else {
+          this.$router.go(-1)
+        }
+      },
       methods: {
-        createOrder() {
-          createOrder(this.placeOrderData).then(response => {
-            this.$message({
-              message: '订单已提交',
-              type: 'success',
-              center: true
-            })
+        gePrepaidCardById(id) {
+          gePrepaidCardById(id).then(response => {
+            console.log(response)
+            this.productData = response.data.result
           })
+        },
+        submitOrder() {
+          if (getToken()) {
+            createOrder(this.placeOrderData).then(response => {
+
+            })
+          } else {
+            this.$router.push({
+              path: '/login',
+              name: 'login',
+              query: {
+                path: '/productDetails',
+                id: this.productId,
+                quantity: this.placeOrderData.quantity
+              },
+              params: {
+                placeOrderData: this.placeOrderData
+              }
+            })
+          }
         }
       }
     }

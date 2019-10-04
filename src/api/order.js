@@ -16,3 +16,27 @@ export function findOrderPage(pageNo,pageSize,lcid,jsonData) {
     method: 'post'
   })
 }
+
+// 获取订单留言
+export function getCommentOrderList(orderUuid) {
+  return fetch({
+    url: '/order/loginUser/comment/getList/' + orderUuid,
+    method: 'get'
+  })
+}
+
+// 删除订单
+export function deleteCommentOrder(orderUuid) {
+  return fetch({
+    url: '/order/loginUser/delete/' + orderUuid,
+    method: 'get'
+  })
+}
+
+// 获取单个order
+export function getOrderList(orderUuid) {
+  return fetch({
+    url: '/order/loginUser/getOrder/' + orderUuid,
+    method: 'get'
+  })
+}

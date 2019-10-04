@@ -73,7 +73,31 @@
               setCookie('userName', this.loginData.username)
               setCookie('realFirstName', escape(getUserInfo.firstName)) //存储用户firstName
               setCookie('realLastName', escape(getUserInfo.lastName)) //存储用户lastName
-              this.$router.push('/')
+              if (this.$route.query.path) {
+                const path = this.$route.query.path
+                if (this.$route.query.id) {
+                  const id = this.$route.query.id
+                  const quantity = this.$route.query.quantity
+                  const placeOrderData = this.$route.params.placeOrderData
+                  this.$router.push({
+                    path: path,
+                    name: 'placeOrder',
+                    query: {
+                      id: id,
+                      quantity: quantity
+                    },
+                    params: {
+                      placeOrderData: placeOrderData
+                    }
+                  })
+                } else {
+                  this.$router.push({
+                    path: path
+                  })
+                }
+              } else {
+                this.$router.push('/')
+              }
             })
           })
         } else if (!this.loginData.username) {

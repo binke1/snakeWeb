@@ -28,6 +28,8 @@
             <template slot-scope="scope">
               <span v-if="scope.row.status==='UNPAID'">待付款</span>
               <span v-else-if="scope.row.status==='PAID'">待支付</span>
+              <span v-else-if="scope.row.status==='COMPLETED'">已完成</span>
+              <span v-else-if="scope.row.status==='CANCELED'">已取消</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="操作">
@@ -50,6 +52,7 @@
 </template>
 
 <script>
+  import bus from '@/utils/eventBus'
   import {findOrderPage} from 'api/order'
   const orderStatusList = [{
       status: '全部',
@@ -61,15 +64,15 @@
       status: '待发货',
       value: 'PAID'
     }, {
-      status: '待收货',
-      value: ''
-    }, {
       status: '已完成',
-      value: ''
+      value: 'COMPLETED'
     }, {
+      status: '已取消',
+      value: 'CANCELED'
+  }/*, {
       status: '退款/售后',
       value: ''
-    }]
+    }*/]
     export default {
       name: "myOrder",
       data() {
@@ -84,13 +87,13 @@
         }
       },
       mounted() {
+        bus.$emit('changeActive', 1)
         this.findOrderPage({})
       },
       methods: {
         findOrderPage(jsonData) {
           this.orderList = []
           findOrderPage(this.pageNo, this.pageSize, 2052, jsonData).then(response => {
-            console.log(response)
             this.orderList = response.data.result.list
             this.total = response.data.result.recordsTotal
           })

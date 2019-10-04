@@ -30,6 +30,7 @@
 </template>
 
 <script>
+  import bus from '@/utils/eventBus'
   export default {
     name: "myOrder",
     data() {
@@ -40,6 +41,9 @@
         tableData: [],
         total: 0
       }
+    },
+    mounted() {
+      bus.$emit('changeActive', 3)
     },
     methods: {
       changeStatus(index) {

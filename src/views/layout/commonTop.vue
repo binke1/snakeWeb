@@ -80,17 +80,17 @@
     },
     methods: {
       loginOut() {
-        logout().then(response => {
-          if(response.data.result.messages[0].code == '2002'){
-            removeUserUuid()
-            removeToken()
-            delCookie('realFirstName')
-            delCookie('realLastName')
-            delCookie('userName')
-            this.$router.push({
-              name: 'login'
-            })
-          }
+        this.$store.dispatch('LogOut').then(() => {
+          removeUserUuid()
+          removeToken()
+          delCookie('realFirstName')
+          delCookie('realLastName')
+          delCookie('userName')
+          delCookie('token')
+          this.$router.push({
+            path: '/login'
+          })
+          // location.reload()
         })
       },
       goToRouter(index) {

@@ -47,6 +47,7 @@
 </template>
 
 <script>
+  import bus from '@/utils/eventBus'
   const menuList = [{
     title: '全部',
     value: ''
@@ -71,6 +72,9 @@
         tableData: [],
         total: 0
       }
+    },
+    mounted() {
+      bus.$emit('changeActive', 4)
     },
     methods: {
       changeStatus(index) {

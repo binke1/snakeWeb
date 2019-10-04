@@ -29,6 +29,7 @@
 </template>
 
 <script>
+  import bus from '@/utils/eventBus'
   const menuList = [{
     title: '添加账单地址',
     value: ''
@@ -44,6 +45,9 @@
         tableData: [],
         total: 0
       }
+    },
+    mounted() {
+      bus.$emit('changeActive', 8)
     },
     methods: {
       changeStatus(index) {

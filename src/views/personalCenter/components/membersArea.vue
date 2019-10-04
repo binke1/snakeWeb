@@ -58,6 +58,7 @@
 </template>
 
 <script>
+  import bus from '@/utils/eventBus'
   import {getCookie} from "@/utils/auth";
   export default {
     name: "membersArea",
@@ -69,6 +70,7 @@
       }
     },
     mounted() {
+      bus.$emit('changeActive', 0)
       this.userName = getCookie('userName')
     }
   }

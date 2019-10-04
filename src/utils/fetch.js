@@ -20,8 +20,8 @@ service.interceptors.request.use(config => {
     removeUserUuid()
     return config
   }
-  // if (config.url == loginUrl) {
-  if (config.url.indexOf('login') > -1) {
+  if (config.url == loginUrl) {
+  // if (config.url.indexOf('login') > -1) {
     const username = config.data?config.data.username?config.data.username:undefined:undefined
     const password = config.data?config.data.password?config.data.password:undefined:undefined
     var credentials = 'Basic ' + encodeBasic64(username + ':' + password)

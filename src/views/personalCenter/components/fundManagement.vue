@@ -38,6 +38,7 @@
 </template>
 
 <script>
+  import bus from '@/utils/eventBus'
   const menuList = [{
     title: '提现',
     value: ''
@@ -56,6 +57,9 @@
         tableData: [],
         total: 0
       }
+    },
+    mounted() {
+      bus.$emit('changeActive', 6)
     },
     methods: {
       changeStatus(index) {

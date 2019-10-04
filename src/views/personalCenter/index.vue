@@ -16,6 +16,7 @@
 </template>
 
 <script>
+  import bus from '@/utils/eventBus'
   import topCommon from '@/views/layout/commonTop'
   const menuList = [
     {
@@ -70,6 +71,11 @@
           select: 0
         }
       },
+      created() {
+        bus.$on('changeActive', index => {
+          this.select = index
+        })
+      },
       mounted() {
         if (this.$route.query.active) {
           this.select = this.$route.query.active
@@ -77,8 +83,10 @@
       },
       methods: {
         changeMenu(index) {
-          this.select = index
-          this.$router.push(this.menuList[index].router)
+          if (this.select !== index) {
+            this.select = index
+            this.$router.push(this.menuList[index].router)
+          }
         }
       }
     }

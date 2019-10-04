@@ -94,15 +94,19 @@ const user = {
     // Logout
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
-          commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
-          removeToken()
-          removeUserUuid()
+        if (state.token) {
+          logout(state.token).then(() => {
+            commit('SET_TOKEN', '')
+            commit('SET_ROLES', [])
+            removeToken()
+            removeUserUuid()
+            resolve()
+          }).catch(error => {
+            reject(error)
+          })
+        } else{
           resolve()
-        }).catch(error => {
-          reject(error)
-        })
+        }
       })
     },
 
